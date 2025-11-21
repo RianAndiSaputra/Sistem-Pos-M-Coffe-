@@ -129,3 +129,4 @@ Route::get('/staff', function () {
     return view('dashboard.user.staff');
 })->name('staff');
 
+// routesfrontend

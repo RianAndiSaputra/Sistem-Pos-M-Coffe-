@@ -41,6 +41,7 @@ class Order extends Model
         // if ($outletId) {
         //     $query->where('outlet_id', $outletId);
         // }
+        //outlet
 
         return $query->sum('total');
     }
