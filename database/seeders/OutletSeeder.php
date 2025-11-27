@@ -19,6 +19,7 @@ class OutletSeeder extends Seeder
             ['name' => 'Outlet 2', 'address' => 'Jl. Outlet 2', 'phone' => '081234567891', 'email' => 'outlet2@example.com', 'qris' => 'qris/qrs.png'],
             ['name' => 'Outlet 3', 'address' => 'Jl. Outlet 3', 'phone' => '081234567892', 'email' => 'outlet3@example.com', 'qris' => 'qris/qrs.png'],
             ['name' => 'Outlet 4', 'address' => 'Jl. Outlet 4', 'phone' => '081234567893', 'email' => 'outlet4@example.com', 'qris' => 'qris/qrs.png'],
+            ['name' => 'Outlet 5', 'address' => 'Jl. Outlet 5', 'phone' => '081234567894', 'email' => 'outlet5@example.com', 'qris' => 'qris/qrs.png'],
         ];
 
         foreach ($outlets as $outlet) {
