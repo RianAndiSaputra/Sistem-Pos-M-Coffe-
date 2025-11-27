@@ -190,8 +190,14 @@
                     <i data-lucide="bar-chart-3" class="w-4 h-4 mr-3 sidebar-icon"></i>
                     <span class="sidebar-text">Prediksi Penjualan</span>
                 </a>
+                <!-- Tambahan menu Analisis Pembelian -->
+                <a href="/analisis-pembelian" class="menu-subitem flex items-center py-2 transition-all w-full">
+                    <i data-lucide="shopping-cart" class="w-4 h-4 mr-3 sidebar-icon"></i>
+                    <span class="sidebar-text">Analisis Pembelian</span>
+                </a>
             </div>
         </div>
+
 
         <!-- Report Dropdown -->
         <div class="menu-item px-4 py-2 group rounded-lg transition-all" data-dropdown="reportDropdown">

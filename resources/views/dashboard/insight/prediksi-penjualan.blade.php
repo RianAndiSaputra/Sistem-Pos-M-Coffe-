@@ -9,6 +9,14 @@
     <!-- Alert will appear here dynamically -->
 </div>
 
+<!-- Loading Overlay -->
+<div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 flex items-center justify-center hidden">
+    <div class="bg-white rounded-lg p-6 flex items-center gap-3">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-[#3b6b0d]"></div>
+        <span class="text-gray-700 font-medium">Memuat data prediksi...</span>
+    </div>
+</div>
+
 <!-- Page Title + Action -->
 <div class="mb-6">
     <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
@@ -37,23 +45,28 @@
     </div>
 </div>
 
+<!-- Insights Cards -->
+<div id="insightsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <!-- Insights will be loaded here -->
+</div>
+
 <!-- Main Content -->
 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
     <!-- Header + Filter -->
     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
         <div class="flex-1">
             <h2 class="text-2xl font-bold text-gray-800 mb-2">📊 Grafik Prediksi Tren Penjualan</h2>
-            <p class="text-sm text-gray-600">Berdasarkan analisis data penjualan 6 bulan terakhir</p>
+            <p class="text-sm text-gray-600">Berdasarkan analisis data penjualan historis</p>
         </div>
         
         <!-- Filter Controls -->
         <div class="flex flex-col sm:flex-row gap-3">
             <!-- Time Range Filter -->
             <div class="relative">
-                <select id="timeRange" class="pl-10 pr-8 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3b6b0d] appearance-none bg-white">
+                <select id="timeRange" onchange="changePeriod()" class="pl-10 pr-8 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-[#3b6b0d] appearance-none bg-white">
+                    <option value="daily">Harian</option>
                     <option value="weekly">Mingguan</option>
                     <option value="monthly" selected>Bulanan</option>
-                    <option value="quarterly">3 Bulanan</option>
                 </select>
                 <span class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <i data-lucide="calendar" class="w-4 h-4 text-gray-400"></i>
@@ -73,148 +86,225 @@
             <thead class="text-left text-gray-700 border-b-2">
                 <tr>
                     <th class="py-3 font-bold">Periode</th>
-                    <th class="py-3 font-bold text-right">Penjualan Aktual</th>
-                    <th class="py-3 font-bold text-right">Prediksi</th>
-                    <th class="py-3 font-bold text-right">Pertumbuhan</th>
+                    <th class="py-3 font-bold text-right">Prediksi Pendapatan</th>
+                    <th class="py-3 font-bold text-right">Prediksi Transaksi</th>
+                    <th class="py-3 font-bold text-right">Confidence Score</th>
                     <th class="py-3 font-bold text-center">Tren</th>
                 </tr>
             </thead>
-            <tbody class="text-gray-700 divide-y">
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="py-4 font-medium">Jan 2024</td>
-                    <td class="py-4 text-right font-semibold">Rp 118.2 Jt</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right text-green-500">+4.1%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="py-4 font-medium">Feb 2024</td>
-                    <td class="py-4 text-right font-semibold">Rp 122.5 Jt</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right text-green-500">+3.6%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="py-4 font-medium">Mar 2024</td>
-                    <td class="py-4 text-right font-semibold">Rp 125.8 Jt</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right text-green-500">+2.7%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="py-4 font-medium">Apr 2024</td>
-                    <td class="py-4 text-right font-semibold">Rp 121.3 Jt</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right text-red-500">-3.6%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-red-500">
-                            <i data-lucide="trending-down" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200">
-                    <td class="py-4 font-medium">Mei 2024</td>
-                    <td class="py-4 text-right font-semibold">Rp 128.5 Jt</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right text-green-500">+5.9%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200 bg-green-50">
-                    <td class="py-4 font-medium">Jun 2024</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right font-semibold">Rp 132.8 Jt</td>
-                    <td class="py-4 text-right text-green-500">+3.3%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200 bg-green-50">
-                    <td class="py-4 font-medium">Jul 2024</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right font-semibold">Rp 138.2 Jt</td>
-                    <td class="py-4 text-right text-green-500">+4.1%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
-                <tr class="hover:bg-gray-50 transition-colors duration-200 bg-green-50">
-                    <td class="py-4 font-medium">Agu 2024</td>
-                    <td class="py-4 text-right font-semibold">-</td>
-                    <td class="py-4 text-right font-semibold">Rp 144.2 Jt</td>
-                    <td class="py-4 text-right text-green-500">+4.3%</td>
-                    <td class="py-4 text-center">
-                        <div class="flex items-center justify-center gap-1 text-green-500">
-                            <i data-lucide="trending-up" class="w-4 h-4"></i>
-                        </div>
-                    </td>
-                </tr>
+            <tbody id="predictionTableBody" class="text-gray-700 divide-y">
+                <!-- Table rows will be loaded here -->
             </tbody>
         </table>
     </div>
 </div>
 
-<!-- Seasonal Pattern -->
+<!-- Historical Data Chart -->
 <div class="bg-white rounded-lg shadow-lg p-6 mb-6">
-    <h3 class="text-lg font-bold text-gray-800 mb-4">🔄 Pola Penjualan Harian</h3>
+    <h3 class="text-lg font-bold text-gray-800 mb-4">📈 Data Historis Penjualan</h3>
     <div class="h-96 bg-gray-50 rounded-lg p-4">
-        <canvas id="seasonalChart"></canvas>
+        <canvas id="historicalChart"></canvas>
     </div>
+</div>
+
+<!-- Today's Prediction -->
+<div id="todayPrediction" class="bg-white rounded-lg shadow-lg p-6 mb-6">
+    <!-- Today's prediction will be loaded here -->
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    // Initialize charts
+    let forecastData = null;
+    let salesTrendChart = null;
+    let historicalChart = null;
+    let currentPeriod = 'monthly';
+
+    // Initialize on page load
     document.addEventListener('DOMContentLoaded', function() {
-        initializeCharts();
-        setupEventListeners();
+        loadForecastData();
     });
 
-    function initializeCharts() {
-        // Sales Trend Chart
-        const trendCtx = document.getElementById('salesTrendChart').getContext('2d');
-        const trendChart = new Chart(trendCtx, {
+    // Load forecast data from API
+    async function loadForecastData() {
+        showLoading(true);
+        
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                showAlert('error', 'Token tidak ditemukan. Silakan login kembali.');
+                window.location.href = '/login';
+                return;
+            }
+
+            const response = await fetch('http://127.0.0.1:8000/api/forecasts/dashboard', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.status === 401) {
+                showAlert('error', 'Sesi Anda telah berakhir. Silakan login kembali.');
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+                return;
+            }
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+            
+            if (result.success) {
+                forecastData = result.data;
+                renderInsights();
+                renderTodayPrediction();
+                renderCharts();
+                renderPredictionTable();
+                showAlert('success', '✅ Data prediksi berhasil dimuat!');
+            } else {
+                throw new Error(result.message || 'Gagal memuat data');
+            }
+        } catch (error) {
+            console.error('Error loading forecast data:', error);
+            showAlert('error', 'Gagal memuat data prediksi: ' + error.message);
+        } finally {
+            showLoading(false);
+        }
+    }
+
+    // Render insights cards
+    function renderInsights() {
+        const container = document.getElementById('insightsContainer');
+        if (!forecastData.insights || forecastData.insights.length === 0) {
+            container.innerHTML = '';
+            return;
+        }
+
+        container.innerHTML = forecastData.insights.map(insight => {
+            const bgColor = insight.type === 'positive' ? 'bg-green-50' : 
+                           insight.type === 'negative' ? 'bg-red-50' : 'bg-blue-50';
+            const textColor = insight.type === 'positive' ? 'text-green-700' : 
+                             insight.type === 'negative' ? 'text-red-700' : 'text-blue-700';
+            const icon = insight.type === 'positive' ? 'trending-up' : 
+                        insight.type === 'negative' ? 'trending-down' : 'info';
+            
+            return `
+                <div class="${bgColor} rounded-lg p-4 shadow">
+                    <div class="flex items-start gap-3">
+                        <i data-lucide="${icon}" class="w-5 h-5 ${textColor} mt-1"></i>
+                        <p class="${textColor} text-sm font-medium">${insight.message}</p>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        // Re-initialize lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
+
+    // Render today's prediction
+    function renderTodayPrediction() {
+        const container = document.getElementById('todayPrediction');
+        const today = forecastData.today;
+        
+        if (!today || !today.predicted) {
+            container.innerHTML = '<p class="text-gray-500">Data prediksi hari ini tidak tersedia.</p>';
+            return;
+        }
+
+        const predicted = today.predicted;
+        const actual = today.actual;
+        const hasActual = actual && actual.revenue !== null;
+
+        container.innerHTML = `
+            <h3 class="text-lg font-bold text-gray-800 mb-4">📅 Prediksi Hari Ini</h3>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="bg-blue-50 rounded-lg p-4">
+                    <p class="text-sm text-blue-600 mb-1">Prediksi Pendapatan</p>
+                    <p class="text-2xl font-bold text-blue-700">${formatCurrency(predicted.predicted_revenue)}</p>
+                    <p class="text-xs text-blue-500 mt-1">Transaksi: ${parseFloat(predicted.predicted_transactions).toFixed(0)}</p>
+                </div>
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Confidence Score</p>
+                    <p class="text-2xl font-bold text-gray-700">${(parseFloat(predicted.confidence_score) * 100).toFixed(1)}%</p>
+                    <p class="text-xs text-gray-500 mt-1">Range: ${formatCurrency(predicted.lower_bound)} - ${formatCurrency(predicted.upper_bound)}</p>
+                </div>
+                ${hasActual ? `
+                <div class="bg-green-50 rounded-lg p-4">
+                    <p class="text-sm text-green-600 mb-1">Realisasi Aktual</p>
+                    <p class="text-2xl font-bold text-green-700">${formatCurrency(actual.revenue)}</p>
+                    <p class="text-xs text-green-500 mt-1">Transaksi: ${actual.transactions}</p>
+                </div>
+                ` : `
+                <div class="bg-gray-50 rounded-lg p-4">
+                    <p class="text-sm text-gray-600 mb-1">Realisasi Aktual</p>
+                    <p class="text-2xl font-bold text-gray-700">Belum Ada Data</p>
+                    <p class="text-xs text-gray-500 mt-1">Menunggu data transaksi hari ini</p>
+                </div>
+                `}
+            </div>
+        `;
+    }
+
+    // Render charts
+    function renderCharts() {
+        renderSalesTrendChart();
+        renderHistoricalChart();
+    }
+
+    // Render sales trend chart
+    function renderSalesTrendChart() {
+        const ctx = document.getElementById('salesTrendChart').getContext('2d');
+        
+        if (salesTrendChart) {
+            salesTrendChart.destroy();
+        }
+
+        const forecasts = forecastData.forecasts[currentPeriod];
+        const historical = forecastData.historical;
+
+        // Prepare data
+        const allDates = [
+            ...historical.map(h => h.date),
+            ...forecasts.map(f => formatDate(f.forecast_date))
+        ];
+
+        const historicalData = historical.map(h => parseFloat(h.revenue));
+        const forecastDataPoints = Array(historical.length).fill(null).concat(
+            forecasts.map(f => parseFloat(f.predicted_revenue))
+        );
+
+        salesTrendChart = new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                labels: allDates,
                 datasets: [
                     {
-                        label: 'Penjualan Aktual',
-                        data: [118.2, 122.5, 125.8, 121.3, 128.5, null, null, null],
+                        label: 'Penjualan Historis',
+                        data: [...historicalData, ...Array(forecasts.length).fill(null)],
                         borderColor: '#3b82f6',
                         backgroundColor: 'rgba(59, 130, 246, 0.1)',
                         borderWidth: 3,
                         fill: true,
-                        tension: 0.4
+                        tension: 0.4,
+                        pointRadius: 3
                     },
                     {
                         label: 'Prediksi',
-                        data: [null, null, null, null, null, 132.8, 138.2, 144.2],
+                        data: forecastDataPoints,
                         borderColor: '#10b981',
                         backgroundColor: 'rgba(16, 185, 129, 0.1)',
                         borderWidth: 3,
                         borderDash: [5, 5],
                         fill: true,
-                        tension: 0.4
+                        tension: 0.4,
+                        pointRadius: 4
                     }
                 ]
             },
@@ -233,7 +323,7 @@
                                     label += ': ';
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += `Rp ${context.parsed.y} Jt`;
+                                    label += formatCurrency(context.parsed.y);
                                 }
                                 return label;
                             }
@@ -245,51 +335,44 @@
                         beginAtZero: false,
                         title: {
                             display: true,
-                            text: 'Penjualan (Juta Rupiah)'
+                            text: 'Pendapatan (Rp)'
                         },
                         ticks: {
                             callback: function(value) {
-                                return `Rp ${value} Jt`;
+                                return formatCurrencyShort(value);
                             }
                         }
                     },
                     x: {
                         title: {
                             display: true,
-                            text: 'Bulan'
+                            text: 'Periode'
                         }
                     }
                 }
             }
         });
+    }
 
-        // Seasonal Pattern Chart
-        const seasonalCtx = document.getElementById('seasonalChart').getContext('2d');
-        const seasonalChart = new Chart(seasonalCtx, {
+    // Render historical chart
+    function renderHistoricalChart() {
+        const ctx = document.getElementById('historicalChart').getContext('2d');
+        
+        if (historicalChart) {
+            historicalChart.destroy();
+        }
+
+        const historical = forecastData.historical;
+
+        historicalChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
+                labels: historical.map(h => h.date),
                 datasets: [{
-                    label: 'Persentase dari Rata-rata',
-                    data: [85, 88, 92, 95, 105, 125, 115],
-                    backgroundColor: [
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(59, 130, 246, 0.7)',
-                        'rgba(16, 185, 129, 0.7)',
-                        'rgba(249, 115, 22, 0.7)',
-                        'rgba(16, 185, 129, 0.7)'
-                    ],
-                    borderColor: [
-                        '#3b82f6',
-                        '#3b82f6',
-                        '#3b82f6',
-                        '#3b82f6',
-                        '#10b981',
-                        '#f97316',
-                        '#10b981'
-                    ],
+                    label: 'Pendapatan Harian',
+                    data: historical.map(h => parseFloat(h.revenue)),
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: '#3b82f6',
                     borderWidth: 2
                 }]
             },
@@ -303,7 +386,7 @@
                     tooltip: {
                         callbacks: {
                             label: function(context) {
-                                return `${context.parsed.y}% dari rata-rata`;
+                                return `Pendapatan: ${formatCurrency(context.parsed.y)}`;
                             }
                         }
                     }
@@ -313,13 +396,18 @@
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Persentase (%)'
+                            text: 'Pendapatan (Rp)'
                         },
-                        max: 140,
                         ticks: {
                             callback: function(value) {
-                                return value + '%';
+                                return formatCurrencyShort(value);
                             }
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Tanggal'
                         }
                     }
                 }
@@ -327,53 +415,117 @@
         });
     }
 
-    function setupEventListeners() {
-        // Time range filter
-        const timeRangeSelect = document.getElementById('timeRange');
-        if (timeRangeSelect) {
-            timeRangeSelect.addEventListener('change', function() {
-                showAlert('info', `Menampilkan data periode: ${this.options[this.selectedIndex].text}`);
-            });
+    // Render prediction table
+    function renderPredictionTable() {
+        const tbody = document.getElementById('predictionTableBody');
+        const forecasts = forecastData.forecasts[currentPeriod];
+
+        tbody.innerHTML = forecasts.map((forecast, index) => {
+            const growth = index > 0 ? 
+                ((parseFloat(forecast.predicted_revenue) - parseFloat(forecasts[index-1].predicted_revenue)) / 
+                parseFloat(forecasts[index-1].predicted_revenue) * 100) : 0;
+            
+            const isPositive = growth >= 0;
+            const trendColor = isPositive ? 'text-green-500' : 'text-red-500';
+            const trendIcon = isPositive ? 'trending-up' : 'trending-down';
+
+            return `
+                <tr class="hover:bg-gray-50 transition-colors duration-200 bg-green-50">
+                    <td class="py-4 font-medium">${formatDate(forecast.forecast_date)}</td>
+                    <td class="py-4 text-right font-semibold">${formatCurrency(forecast.predicted_revenue)}</td>
+                    <td class="py-4 text-right font-semibold">${parseFloat(forecast.predicted_transactions).toFixed(0)}</td>
+                    <td class="py-4 text-right font-semibold">${(parseFloat(forecast.confidence_score) * 100).toFixed(1)}%</td>
+                    <td class="py-4 text-center">
+                        <div class="flex items-center justify-center gap-1 ${trendColor}">
+                            <i data-lucide="${trendIcon}" class="w-4 h-4"></i>
+                            <span class="text-xs">${Math.abs(growth).toFixed(1)}%</span>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // Re-initialize lucide icons
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
         }
     }
 
-    function refreshPredictions() {
-        showAlert('info', '🔄 Memperbarui analisis prediksi...');
-        
-        setTimeout(() => {
-            showAlert('success', '✅ Prediksi berhasil diperbarui dengan data terbaru!');
-        }, 2000);
+    // Change period filter
+    function changePeriod() {
+        const select = document.getElementById('timeRange');
+        currentPeriod = select.value;
+        renderCharts();
+        renderPredictionTable();
+        showAlert('info', `Menampilkan data periode: ${select.options[select.selectedIndex].text}`);
     }
 
+    // Refresh predictions
+    function refreshPredictions() {
+        loadForecastData();
+    }
+
+    // Export predictions
     function exportPredictions() {
         showAlert('info', '📊 Menyiapkan ekspor data prediksi...');
         
         setTimeout(() => {
-            // Simple CSV export
-            let csv = 'Periode,Penjualan Aktual,Prediksi,Pertumbuhan,Tren\n';
-            csv += 'Jan 2024,118200000,,"+4.1%",up\n';
-            csv += 'Feb 2024,122500000,,"+3.6%",up\n';
-            csv += 'Mar 2024,125800000,,"+2.7%",up\n';
-            csv += 'Apr 2024,121300000,,"-3.6%",down\n';
-            csv += 'Mei 2024,128500000,,"+5.9%",up\n';
-            csv += 'Jun 2024,,132800000,"+3.3%",up\n';
-            csv += 'Jul 2024,,138200000,"+4.1%",up\n';
-            csv += 'Agu 2024,,144200000,"+4.3%",up\n';
+            const forecasts = forecastData.forecasts[currentPeriod];
+            let csv = 'Periode,Prediksi Pendapatan,Prediksi Transaksi,Confidence Score,Lower Bound,Upper Bound\n';
+            
+            forecasts.forEach(f => {
+                csv += `"${formatDate(f.forecast_date)}","${f.predicted_revenue}","${f.predicted_transactions}","${f.confidence_score}","${f.lower_bound}","${f.upper_bound}"\n`;
+            });
             
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
             const url = URL.createObjectURL(blob);
             
             link.setAttribute('href', url);
-            link.setAttribute('download', 'prediksi-tren-MCoffee-Pusat.csv');
+            link.setAttribute('download', `prediksi-${currentPeriod}-${new Date().toISOString().split('T')[0]}.csv`);
             link.style.visibility = 'hidden';
             
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
             
-            showAlert('success', '✅ Data prediksi tren berhasil diekspor!');
+            showAlert('success', '✅ Data prediksi berhasil diekspor!');
         }, 1000);
+    }
+
+    // Utility functions
+    function formatCurrency(value) {
+        if (!value || value === null) return 'Rp 0';
+        return 'Rp ' + parseFloat(value).toLocaleString('id-ID', { 
+            minimumFractionDigits: 0,
+            maximumFractionDigits: 0 
+        });
+    }
+
+    function formatCurrencyShort(value) {
+        if (!value || value === null) return 'Rp 0';
+        const num = parseFloat(value);
+        if (num >= 1000000) {
+            return 'Rp ' + (num / 1000000).toFixed(1) + ' Jt';
+        } else if (num >= 1000) {
+            return 'Rp ' + (num / 1000).toFixed(0) + ' Rb';
+        }
+        return 'Rp ' + num.toFixed(0);
+    }
+
+    function formatDate(dateString) {
+        const date = new Date(dateString);
+        const options = { year: 'numeric', month: 'short', day: 'numeric' };
+        return date.toLocaleDateString('id-ID', options);
+    }
+
+    function showLoading(show) {
+        const overlay = document.getElementById('loadingOverlay');
+        if (show) {
+            overlay.classList.remove('hidden');
+        } else {
+            overlay.classList.add('hidden');
+        }
     }
 
     function showAlert(type, message) {
@@ -389,7 +541,7 @@
                 <div class="flex items-center gap-2">
                     <span>${message}</span>
                 </div>
-                <button onclick="this.parentElement.parentElement.remove()" class="hover:opacity-70">
+                <button onclick="this.parentElement.parentElement.remove()" class="hover:opacity-70 text-xl leading-none">
                     ×
                 </button>
             </div>
