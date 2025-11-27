@@ -16,6 +16,7 @@ use App\Http\Controllers\RawMaterialController;
 use App\Http\Controllers\CashRegisterController;
 use App\Http\Controllers\PrintTemplateController;
 use App\Http\Controllers\ProductRecipeController;
+use App\Http\Controllers\SalesForecastController;
 use App\Http\Controllers\InventoryHistoryController;
 use App\Http\Controllers\RawMaterialStockController;
 use App\Http\Controllers\RawMaterialPurchaseController;
@@ -160,6 +161,23 @@ Route::middleware('auth:sanctum')->group(function () {
             return response()->json([
                 'message' => 'Ini untuk admin'
             ]);
+        });
+
+        Route::prefix('forecasts')->group(function () {
+            // Get forecasts
+            Route::get('/', [SalesForecastController::class, 'index']);
+            Route::get('/daily', [SalesForecastController::class, 'daily']);
+            Route::get('/weekly', [SalesForecastController::class, 'weekly']);
+            Route::get('/monthly', [SalesForecastController::class, 'monthly']);
+            
+            // Dashboard data
+            Route::get('/dashboard', [SalesForecastController::class, 'dashboard']);
+            
+            // Generate new forecasts
+            Route::post('/generate', [SalesForecastController::class, 'generate']);
+            
+            // Model accuracy
+            Route::get('/accuracy', [SalesForecastController::class, 'accuracy']);
         });
     }); 
     
